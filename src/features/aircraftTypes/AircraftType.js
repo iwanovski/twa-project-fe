@@ -19,6 +19,7 @@ const AircraftType = ({ aircraftTypeId }) => {
             <tr className="table__row user">
                 <td className={`table__cell ${cellStatus}`}>{aircraftType.name}</td>
                 <td className={`table__cell ${cellStatus}`}>{aircraftType.code}</td>
+                <td className={`table__cell ${cellStatus}`}>{aircraftType.numberOfPlaces}</td>
                 <td className={`table__cell ${cellStatus}`}>
                     <button
                         className="icon-button table__button"

@@ -1,7 +1,7 @@
-import { useGetAirportsQuery } from "./airportsApiSlice"
-import Airport from "./Airport"
+import { useGetFlightsQuery } from "./flightsApiSlice"
+import Flight from "./Flight"
 
-const AirportsList = () => {
+const FlightsList = () => {
 
   const {
     data: users,
@@ -9,7 +9,7 @@ const AirportsList = () => {
     isSuccess,
     isError,
     error
-  } = useGetAirportsQuery()
+  } = useGetFlightsQuery()
 
   let content
 
@@ -24,16 +24,16 @@ const AirportsList = () => {
       const { ids } = users
 
       const tableContent = ids?.length
-          ? ids.map(airportId => <Airport key={airportId} airportId={airportId} />)
+          ? ids.map(flightId => <Flight key={flightId} flightId={flightId} />)
           : null
 
       content = (
-          <table className="table__airports table--users">
+          <table className="table table--users">
               <thead className="table__thead">
                   <tr>
                       <th scope="col" className="table__th user__username">Code</th>
                       <th scope="col" className="table__th user__roles">Fullname</th>
-                      <th scope="col" className="table__th user__edit">Address</th>
+                      <th scope="col" className="table__th user__edit">Placeholder</th>
                   </tr>
               </thead>
               <tbody>
@@ -46,4 +46,4 @@ const AirportsList = () => {
   return content
 }
 
-export default AirportsList
+export default FlightsList

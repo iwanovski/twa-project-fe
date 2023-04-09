@@ -11,7 +11,7 @@ const Airport = ({ airportId }) => {
             <tr className="table__row user">
                 <td className={`table__cell ${cellStatus}`}>{airport.code}</td>
                 <td className={`table__cell ${cellStatus}`}>{airport.fullName}</td>
-                <td className={`table__cell ${cellStatus}`}>{airport.homeAirportCode}</td>
+                <td className={`table__cell ${cellStatus}`}>{airport.address}</td>
             </tr>
         )
 

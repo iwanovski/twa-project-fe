@@ -20,6 +20,14 @@ const Welcome = () => {
 
             <p><Link to="/home/airports">View airports</Link></p>
 
+            <p><Link to = "/home/aircraftCrews">View aircraft crews</Link></p>
+
+            <p><Link to = "/home/mechanicCrews">View mechanic crews</Link></p>
+
+            <p><Link to = "/home/flights">View scheduled flights</Link></p>
+
+            <p><Link to = "/home/maintenances">View scheduled maintenances</Link></p>
+
         </section>
     )
 

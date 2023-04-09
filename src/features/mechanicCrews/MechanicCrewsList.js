@@ -1,7 +1,7 @@
-import { useGetAircraftTypesQuery } from "./aircraftTypesApiSlice"
-import AircraftType from "./AircraftType"
+import { useGetMechanicCrewsQuery } from "./mechanicCrewsApiSlice"
+import MechanicCrew from "./MechanicCrew"
 
-const AircraftTypesList = () => {
+const MechanicCrewsList = () => {
 
   const {
     data: users,
@@ -9,7 +9,7 @@ const AircraftTypesList = () => {
     isSuccess,
     isError,
     error
-  } = useGetAircraftTypesQuery()
+  } = useGetMechanicCrewsQuery()
 
   let content
 
@@ -24,17 +24,16 @@ const AircraftTypesList = () => {
       const { ids } = users
 
       const tableContent = ids?.length
-          ? ids.map(aircraftTypeId => <AircraftType key={aircraftTypeId} aircraftTypeId={aircraftTypeId} />)
+          ? ids.map(mechanicCrewId => <MechanicCrew key={mechanicCrewId} mechanicCrewId={mechanicCrewId} />)
           : null
 
       content = (
-          <table className="table__aircraftTypes table--users">
+          <table className="table table--users">
               <thead className="table__thead">
                   <tr>
                       <th scope="col" className="table__th user__username">Name</th>
-                      <th scope="col" className="table__th user__roles">Code</th>
-                      <th scope="col" className="table__th user__roles">Space</th>
-                      <th scope="col" className="table__th user__edit">Edit</th>
+                      <th scope="col" className="table__th user__roles">Home airport</th>
+                      <th scope="col" className="table__th user__edit">Second pilot</th>
                   </tr>
               </thead>
               <tbody>
@@ -47,4 +46,4 @@ const AircraftTypesList = () => {
   return content
 }
 
-export default AircraftTypesList
+export default MechanicCrewsList
