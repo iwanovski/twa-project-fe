@@ -15,6 +15,7 @@ import MaintenancesList from './features/maintenances/MaintenancesList'
 import EditUser from './features/users/EditUser'
 import NewUserForm from './features/users/NewUserForm'
 import Prefetch from './features/auth/Prefetch'
+import PersistLogin from './features/auth/PersistLogin'
 
 function App() {
     return (
@@ -22,8 +23,9 @@ function App() {
             <Route path="/" element={<Layout />}>
                 <Route index element={<Public />} />
                 <Route path="login" element={<Login />} />
+                <Route element={<PersistLogin />}>
                 <Route element={<Prefetch />}>
-                <Route path="home" element={<DashLayout />}>
+                  <Route path="home" element={<DashLayout />}>
 
                     <Route index element={<Welcome />} />
 
@@ -61,6 +63,7 @@ function App() {
                         <Route index element={<MaintenancesList />} />
                     </Route>
 
+                  </Route>
                 </Route>
                 </Route>
             </Route>
