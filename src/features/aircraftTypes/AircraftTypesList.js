@@ -4,7 +4,7 @@ import AircraftType from "./AircraftType"
 const AircraftTypesList = () => {
 
   const {
-    data: users,
+    data: aircraftTypes,
     isLoading,
     isSuccess,
     isError,
@@ -21,7 +21,7 @@ const AircraftTypesList = () => {
 
   if (isSuccess) {
 
-      const { ids } = users
+      const { ids } = aircraftTypes
 
       const tableContent = ids?.length
           ? ids.map(aircraftTypeId => <AircraftType key={aircraftTypeId} aircraftTypeId={aircraftTypeId} />)
@@ -33,7 +33,7 @@ const AircraftTypesList = () => {
                   <tr>
                       <th scope="col" className="table__th user__username">Name</th>
                       <th scope="col" className="table__th user__roles">Code</th>
-                      <th scope="col" className="table__th user__roles">Space</th>
+                      <th scope="col" className="table__th user__edit">Space</th>
                       <th scope="col" className="table__th user__edit">Edit</th>
                   </tr>
               </thead>

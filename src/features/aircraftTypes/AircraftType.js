@@ -11,7 +11,7 @@ const AircraftType = ({ aircraftTypeId }) => {
     const navigate = useNavigate()
 
     if (aircraftType) {
-        const handleEdit = () => navigate(`/dash/aircraftTypes/${aircraftTypeId}`)
+        const handleEdit = () => navigate(`/home/aircraftTypes/${aircraftTypeId}`)
 
         const cellStatus = aircraftType.active ? '' : 'table__cell--inactive'
 

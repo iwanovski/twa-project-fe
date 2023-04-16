@@ -12,7 +12,6 @@ export const aicraftTypesApiSlice = apiSlice.injectEndpoints({
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },
-            keepUnusedDataFor: 5,
             // Transform response from mongo query
             transformResponse: responseData => {
                 const loadedAircraftTypes = responseData.map(aircraftType => {
@@ -30,19 +29,56 @@ export const aicraftTypesApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'AircraftType', id: 'LIST' }]
             }
         }),
+        addNewAircraftType: builder.mutation({
+            query: initialAircraftTypeData => ({
+                url: '/aircraftTypes',
+                method: 'POST',
+                body: {
+                    ...initialAircraftTypeData,
+                }
+            }),
+            invalidatesTags: [
+                { type: 'AircraftType', id: "LIST" }
+            ]
+        }),
+        updateAircraftType: builder.mutation({
+            query: initialAircraftTypeData => ({
+                url: '/aircraftTypes',
+                method: 'PATCH',
+                body: {
+                    ...initialAircraftTypeData,
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'AircraftType', id: arg.id }
+            ]
+        }),
+        deleteAircraftType: builder.mutation({
+            query: ({ id }) => ({
+                url: `/aircraftTypes`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'AircraftType', id: arg.id }
+            ]
+        }),
     }),
 })
 // Automatically generated hook
 export const {
     useGetAircraftTypesQuery,
+    useAddNewAircraftTypeMutation,
+    useUpdateAircraftTypeMutation,
+    useDeleteAircraftTypeMutation,
 } = aicraftTypesApiSlice
 
 // returns the query result object
-export const selectAircrafTypesResult = aicraftTypesApiSlice.endpoints.getAircraftTypes.select()
+export const selectAircraftTypesResult = aicraftTypesApiSlice.endpoints.getAircraftTypes.select()
 
 // creates memoized selector
 const selectAircraftTypesData = createSelector(
-    selectAircrafTypesResult,
+    selectAircraftTypesResult,
     aircraftTypesResult => aircraftTypesResult.data // normalized state object with ids & entities
 )
 

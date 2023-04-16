@@ -3,10 +3,13 @@ import { useAddNewUserMutation } from "./usersApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave } from "@fortawesome/free-solid-svg-icons"
+import { ROLES } from "../../config/roles"
 
 // Just default regex without regarding safety
-const USER_REGEX = /^[A-z]{5,18}$/
-const PWD_REGEX = /^[A-z0-9!@#$%]{6,15}$/
+const USER_REGEX = /^[A-z0-9]{3,20}$/
+const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+const FULL_NAME_REGEX = /^[A-z0-9 ]{3,50}$/
 
 const NewUserForm = () => {
 
@@ -23,6 +26,11 @@ const NewUserForm = () => {
   const [validUsername, setValidUsername] = useState(false)
   const [password, setPassword] = useState('')
   const [validPassword, setValidPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [validEmail, setValidEmail] = useState(false)
+  const [fullName, setFullName] = useState('')
+  const [validFullName, setValidFullName] = useState(false)
+  const [roles, setRoles] = useState([])
 
   useEffect(() => {
     setValidUsername(USER_REGEX.test(username))
@@ -33,28 +41,62 @@ const NewUserForm = () => {
   }, [password])
 
   useEffect(() => {
+    setValidEmail(EMAIL_REGEX.test(email))
+  }, [email])
+
+  useEffect(() => {
+    setValidFullName(FULL_NAME_REGEX.test(fullName))
+  }, [fullName])
+
+  useEffect(() => {
     if (isSuccess) {
         setUsername('')
         setPassword('')
+        setEmail('')
+        setFullName('')
+        setRoles([])
         navigate('/home/users')
     }
   }, [isSuccess, navigate])
 
   const onUsernameChanged = e => setUsername(e.target.value)
   const onPasswordChanged = e => setPassword(e.target.value)
+  const onEmailChanged = e => setEmail(e.target.value)
+  const onFullNameChanged = e => setFullName(e.target.value)
 
-  const canSave = [validUsername, validPassword].every(Boolean) && !isLoading
+  const onRolesChanged = e => {
+    const values = Array.from(
+        e.target.selectedOptions, //HTMLCollection 
+        (option) => option.value
+    )
+    setRoles(values)
+  }
+
+  const canSave = [validUsername, validPassword, validEmail, validFullName, roles.length].every(Boolean) && !isLoading
 
   const onSaveUserClicked = async (e) => {
       e.preventDefault()
       if (canSave) {
-          await addNewUser({ username, password })
+          await addNewUser({ username, password, email, fullName, roles })
       }
   }
+
+  const options = Object.values(ROLES).map(role => {
+    return (
+        <option
+            key={role}
+            value={role}
+
+        > {role}</option >
+    )
+})
 
   const errClass = isError ? "errmsg" : "offscreen"
   const validUserClass = !validUsername ? 'form__input--incomplete' : ''
   const validPwdClass = !validPassword ? 'form__input--incomplete' : ''
+  const validEmailClass = !validEmail ? 'form__input--incomplete' : ''
+  const validFullNameClass = !validFullName ? 'form__input--incomplete' : ''
+  const validRolesClass = !Boolean(roles.length) ? 'form__input--incomplete' : ''
 
   const content = (
     <>
@@ -73,6 +115,7 @@ const NewUserForm = () => {
                     </button>
                 </div>
             </div>
+
             <label className="form__label" htmlFor="username">
                 Username: <span className="nowrap">[3-20 letters]</span></label>
             <input
@@ -95,6 +138,42 @@ const NewUserForm = () => {
                 value={password}
                 onChange={onPasswordChanged}
             />
+
+            <label className="form__label" htmlFor="email">
+                Email: <span className="nowrap">[Valid email address]</span></label>
+            <input
+                className={`form__input ${validEmailClass}`}
+                id="email"
+                name="email"
+                type="text"
+                value={email}
+                onChange={onEmailChanged}
+            />
+
+            <label className="form__label" htmlFor="fullName">
+                FullName: <span className="nowrap">[]</span></label>
+            <input
+                className={`form__input ${validFullNameClass}`}
+                id="fullName"
+                name="fullName"
+                type="text"
+                value={fullName}
+                onChange={onFullNameChanged}
+            />
+
+            <label className="form__label" htmlFor="roles">
+                    ASSIGNED ROLES:</label>
+                <select
+                    id="roles"
+                    name="roles"
+                    className={`form__select ${validRolesClass}`}
+                    multiple={true}
+                    size="13"
+                    value={roles}
+                    onChange={onRolesChanged}
+                >
+                    {options}
+                </select>   
 
         </form>
     </>

@@ -4,16 +4,21 @@ import Public from './components/Public'
 import Login from './features/auth/Login'
 import DashLayout from './components/DashLayout'
 import Welcome from './features/auth/Welcome'
+
 import UsersList from './features/users/UsersList'
+import EditUser from './features/users/EditUser'
+import NewUserForm from './features/users/NewUserForm'
+
 import AircraftTypesList from './features/aircraftTypes/AircraftTypesList'
+import EditAircraftType from './features/aircraftTypes/EditAircraftType'
+import NewAircraftTypeForm from './features/aircraftTypes/NewAircraftTypeForm'
+
 import AircraftsList from './features/aircrafts/AircraftsList'
 import AirportsList from './features/airports/AirportsList'
 import AircraftCrewsList from './features/aircraftCrews/AircraftCrewsList'
 import MechanicCrewsList from './features/mechanicCrews/MechanicCrewsList'
 import FlightsList from './features/flights/FlightsList'
 import MaintenancesList from './features/maintenances/MaintenancesList'
-import EditUser from './features/users/EditUser'
-import NewUserForm from './features/users/NewUserForm'
 import Prefetch from './features/auth/Prefetch'
 import PersistLogin from './features/auth/PersistLogin'
 
@@ -37,6 +42,8 @@ function App() {
 
                     <Route path="aircraftTypes">
                         <Route index element={<AircraftTypesList />} />
+                        <Route path=":id" element={<EditAircraftType />}/>
+                        <Route path="new" element={<NewAircraftTypeForm />}/>
                     </Route>
 
                     <Route path="aircrafts">
