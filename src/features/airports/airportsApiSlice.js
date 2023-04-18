@@ -12,7 +12,6 @@ export const airportsApiSlice = apiSlice.injectEndpoints({
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },
-            keepUnusedDataFor: 5,
             // Transform response from mongo query
             transformResponse: responseData => {
                 const loadedAirports = responseData.map(airport => {
@@ -30,11 +29,48 @@ export const airportsApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'Airport', id: 'LIST' }]
             }
         }),
+        addNewAirport: builder.mutation({
+            query: initialAirportData => ({
+                url: '/airports',
+                method: 'POST',
+                body: {
+                    ...initialAirportData,
+                }
+            }),
+            invalidatesTags: [
+                { type: 'Airport', id: "LIST" }
+            ]
+        }),
+        updateAirport: builder.mutation({
+            query: initialAirporttData => ({
+                url: '/airports',
+                method: 'PATCH',
+                body: {
+                    ...initialAirporttData,
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Airport', id: arg.id }
+            ]
+        }),
+        deleteAirport: builder.mutation({
+            query: ({ id }) => ({
+                url: `/airports`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Airport', id: arg.id }
+            ]
+        }),
     }),
 })
 // Automatically generated hook
 export const {
     useGetAirportsQuery,
+    useAddNewAirportMutation,
+    useUpdateAirportMutation,
+    useDeleteAirportMutation,
 } = airportsApiSlice
 
 // returns the query result object

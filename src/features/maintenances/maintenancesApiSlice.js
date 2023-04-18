@@ -12,7 +12,6 @@ export const maintenancesApiSlice = apiSlice.injectEndpoints({
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },
-            keepUnusedDataFor: 5,
             // Transform response from mongo query
             transformResponse: responseData => {
                 const loadedMaintenances = responseData.map(maintenance => {

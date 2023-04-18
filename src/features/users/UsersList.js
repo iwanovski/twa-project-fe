@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useGetUsersQuery } from "./usersApiSlice"
 import User from "./User"
 
@@ -15,6 +16,8 @@ const UsersList = () => {
     refetchOnMountOrArgChange: true
   })
 
+  const navigate = useNavigate()
+
   let content
 
   if (isLoading) content = <p>Loading...</p>
@@ -24,6 +27,7 @@ const UsersList = () => {
   }
 
   if (isSuccess) {
+      const handleButtonClick = () => navigate(`/home/users/new`)
 
       const { ids } = users
 
@@ -43,6 +47,13 @@ const UsersList = () => {
               <tbody>
                   {tableContent}
               </tbody>
+              <tfoot>
+                <tr>
+                    <td colSpan="1">
+                        <button onClick={handleButtonClick}>Create user</button>
+                    </td>
+                </tr>
+              </tfoot>
           </table>
       )
   }

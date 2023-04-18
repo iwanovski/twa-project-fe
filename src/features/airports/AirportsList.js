@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useGetAirportsQuery } from "./airportsApiSlice"
 import Airport from "./Airport"
 
@@ -11,6 +12,8 @@ const AirportsList = () => {
     error
   } = useGetAirportsQuery()
 
+  const navigate = useNavigate()
+
   let content
 
   if (isLoading) content = <p>Loading...</p>
@@ -20,6 +23,7 @@ const AirportsList = () => {
   }
 
   if (isSuccess) {
+      const handleButtonClick = () => navigate(`/home/airports/new`)
 
       const { ids } = users
 
@@ -34,11 +38,19 @@ const AirportsList = () => {
                       <th scope="col" className="table__th user__username">Code</th>
                       <th scope="col" className="table__th user__roles">Fullname</th>
                       <th scope="col" className="table__th user__edit">Address</th>
+                      <th scope="col" className="table__th user__edit">Edit</th>
                   </tr>
               </thead>
               <tbody>
                   {tableContent}
               </tbody>
+              <tfoot>
+                <tr>
+                    <td colSpan="1">
+                        <button onClick={handleButtonClick}>Create new airport</button>
+                    </td>
+                </tr>
+              </tfoot>
           </table>
       )
   }

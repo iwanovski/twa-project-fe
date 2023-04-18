@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useGetAircraftCrewsQuery } from "./aircraftCrewsApiSlice"
 import AircraftCrew from "./AircraftCrew"
 
@@ -11,6 +12,8 @@ const AircraftCrewsList = () => {
     error
   } = useGetAircraftCrewsQuery()
 
+  const navigate = useNavigate()
+
   let content
 
   if (isLoading) content = <p>Loading...</p>
@@ -20,6 +23,7 @@ const AircraftCrewsList = () => {
   }
 
   if (isSuccess) {
+      const handleButtonClick = () => navigate(`/home/aircraftCrews/new`)
 
       const { ids } = users
 
@@ -28,17 +32,25 @@ const AircraftCrewsList = () => {
           : null
 
       content = (
-          <table className="table table--users">
+          <table className="table__aircraftCrews table--users">
               <thead className="table__thead">
                   <tr>
-                      <th scope="col" className="table__th user__username">Id</th>
+                      <th scope="col" className="table__th user__username">Name</th>
                       <th scope="col" className="table__th user__roles">Main pilot</th>
                       <th scope="col" className="table__th user__edit">Second pilot</th>
+                      <th scope="col" className="table__th user__edit">Edit</th>
                   </tr>
               </thead>
               <tbody>
                   {tableContent}
               </tbody>
+              <tfoot>
+                <tr>
+                    <td colSpan="1">
+                        <button onClick={handleButtonClick}>Create new aicraftCrew</button>
+                    </td>
+                </tr>
+              </tfoot>
           </table>
       )
   }

@@ -48,7 +48,7 @@ const DashHeader = () => {
         <header className="dash-header">
             <div className={`dash-header__container ${dashClass}`}>
                 <Link to="/home">
-                    <h1 className="dash-header__title">aircraftManager</h1>
+                    <h1 className="dash-header__title">Aircraft Manager</h1>
                 </Link>
                 <nav className="dash-header__nav">
                     {/* add more buttons later */}

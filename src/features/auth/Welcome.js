@@ -8,25 +8,23 @@ const Welcome = () => {
     const content = (
         <section className="welcome">
 
-            <p>{today}</p>
+            <p>Today's date: {today}</p>
 
-            <h1>Welcome!</h1>
+            <p><Link to="/home/users">User Settings</Link></p>
 
-            <p><Link to="/home/users">View User Settings</Link></p>
+            <p><Link to="/home/aircraftTypes">Aircraft Types</Link></p>
 
-            <p><Link to="/home/aircraftTypes">View aircraft types</Link></p>
+            <p><Link to="/home/aircrafts">Aircrafts</Link></p>
 
-            <p><Link to="/home/aircrafts">View aircrafts</Link></p>
+            <p><Link to="/home/airports">Airports</Link></p>
 
-            <p><Link to="/home/airports">View airports</Link></p>
+            <p><Link to = "/home/aircraftCrews">Aircraft crews</Link></p>
 
-            <p><Link to = "/home/aircraftCrews">View aircraft crews</Link></p>
+            <p><Link to = "/home/mechanicCrews">Mechanic crews</Link></p>
 
-            <p><Link to = "/home/mechanicCrews">View mechanic crews</Link></p>
+            <p><Link to = "/home/flights">Scheduled flights</Link></p>
 
-            <p><Link to = "/home/flights">View scheduled flights</Link></p>
-
-            <p><Link to = "/home/maintenances">View scheduled maintenances</Link></p>
+            <p><Link to = "/home/maintenances">Scheduled maintenances</Link></p>
 
         </section>
     )

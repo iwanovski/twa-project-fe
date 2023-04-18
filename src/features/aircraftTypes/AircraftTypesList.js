@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { useGetAircraftTypesQuery } from "./aircraftTypesApiSlice"
 import AircraftType from "./AircraftType"
 
@@ -11,6 +12,8 @@ const AircraftTypesList = () => {
     error
   } = useGetAircraftTypesQuery()
 
+  const navigate = useNavigate()
+
   let content
 
   if (isLoading) content = <p>Loading...</p>
@@ -20,6 +23,7 @@ const AircraftTypesList = () => {
   }
 
   if (isSuccess) {
+      const handleButtonClick = () => navigate(`/home/aircraftTypes/new`)
 
       const { ids } = aircraftTypes
 
@@ -40,6 +44,13 @@ const AircraftTypesList = () => {
               <tbody>
                   {tableContent}
               </tbody>
+              <tfoot>
+                <tr>
+                    <td colSpan="1">
+                        <button onClick={handleButtonClick}>Create new aircraftType</button>
+                    </td>
+                </tr>
+              </tfoot>
           </table>
       )
   }

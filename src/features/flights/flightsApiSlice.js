@@ -12,7 +12,6 @@ export const flightsApiSlice = apiSlice.injectEndpoints({
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },
-            keepUnusedDataFor: 5,
             // Transform response from mongo query
             transformResponse: responseData => {
                 const loadedFlights = responseData.map(flight => {
@@ -30,11 +29,48 @@ export const flightsApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'Flight', id: 'LIST' }]
             }
         }),
+        addNewFlight: builder.mutation({
+            query: initialFlightData => ({
+                url: '/flights',
+                method: 'POST',
+                body: {
+                    ...initialFlightData,
+                }
+            }),
+            invalidatesTags: [
+                { type: 'Flight', id: "LIST" }
+            ]
+        }),
+        updateFlight: builder.mutation({
+            query: initialFlightData => ({
+                url: '/flights',
+                method: 'PATCH',
+                body: {
+                    ...initialFlightData,
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Flight', id: arg.id }
+            ]
+        }),
+        deleteFlight: builder.mutation({
+            query: ({ id }) => ({
+                url: `/flights`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Flight', id: arg.id }
+            ]
+        }),
     }),
 })
 // Automatically generated hook
 export const {
     useGetFlightsQuery,
+    useAddNewFlightMutation,
+    useUpdateFlightMutation,
+    useDeleteFlightMutation,
 } = flightsApiSlice
 
 // returns the query result object

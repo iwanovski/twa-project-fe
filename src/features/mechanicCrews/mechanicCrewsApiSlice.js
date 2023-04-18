@@ -12,7 +12,6 @@ export const mechanicCrewsApiSlice = apiSlice.injectEndpoints({
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },
-            keepUnusedDataFor: 5,
             // Transform response from mongo query
             transformResponse: responseData => {
                 const loadedMechanicCrews = responseData.map(mechanicCrew => {
@@ -30,11 +29,48 @@ export const mechanicCrewsApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'MechanicCrew', id: 'LIST' }]
             }
         }),
+        addNewMechanicCrew: builder.mutation({
+            query: initialMechanicCrewData => ({
+                url: '/mechanicCrews',
+                method: 'POST',
+                body: {
+                    ...initialMechanicCrewData,
+                }
+            }),
+            invalidatesTags: [
+                { type: 'MechanicCrew', id: "LIST" }
+            ]
+        }),
+        updateMechanicCrew: builder.mutation({
+            query: initialMechanicCrewData => ({
+                url: '/mechanicCrews',
+                method: 'PATCH',
+                body: {
+                    ...initialMechanicCrewData,
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'MechanicCrew', id: arg.id }
+            ]
+        }),
+        deleteMechanicCrew: builder.mutation({
+            query: ({ id }) => ({
+                url: `/mechanicCrews`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'MechanicCrew', id: arg.id }
+            ]
+        }),
     }),
 })
 // Automatically generated hook
 export const {
     useGetMechanicCrewsQuery,
+    useAddNewMechanicCrewMutation,
+    useUpdateMechanicCrewMutation,
+    useDeleteMechanicCrewMutation,
 } = mechanicCrewsApiSlice
 
 // returns the query result object

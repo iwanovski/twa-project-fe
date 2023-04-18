@@ -12,7 +12,6 @@ export const aicraftCrewsApiSlice = apiSlice.injectEndpoints({
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },
-            keepUnusedDataFor: 5,
             // Transform response from mongo query
             transformResponse: responseData => {
                 const loadedAircraftCrews = responseData.map(aircraftCrew => {
@@ -30,11 +29,48 @@ export const aicraftCrewsApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'AircraftCrew', id: 'LIST' }]
             }
         }),
+        addNewAircraftCrew: builder.mutation({
+            query: initialAircraftCrewData => ({
+                url: '/aircraftCrews',
+                method: 'POST',
+                body: {
+                    ...initialAircraftCrewData,
+                }
+            }),
+            invalidatesTags: [
+                { type: 'AircraftCrew', id: "LIST" }
+            ]
+        }),
+        updateAircraftCrew: builder.mutation({
+            query: initialAircraftCrewData => ({
+                url: '/aircraftCrews',
+                method: 'PATCH',
+                body: {
+                    ...initialAircraftCrewData,
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'AircraftCrew', id: arg.id }
+            ]
+        }),
+        deleteAircraftCrew: builder.mutation({
+            query: ({ id }) => ({
+                url: `/aircraftCrews`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'AircraftCrew', id: arg.id }
+            ]
+        }),
     }),
 })
 // Automatically generated hook
 export const {
     useGetAircraftCrewsQuery,
+    useAddNewAircraftCrewMutation,
+    useUpdateAircraftCrewMutation,
+    useDeleteAircraftCrewMutation,
 } = aicraftCrewsApiSlice
 
 // returns the query result object

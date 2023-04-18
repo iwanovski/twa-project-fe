@@ -12,7 +12,6 @@ export const aicraftsApiSlice = apiSlice.injectEndpoints({
             validateStatus: (response, result) => {
                 return response.status === 200 && !result.isError
             },
-            keepUnusedDataFor: 5,
             // Transform response from mongo query
             transformResponse: responseData => {
                 const loadedAircrafts = responseData.map(aircraft => {
@@ -30,11 +29,48 @@ export const aicraftsApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'Aircraft', id: 'LIST' }]
             }
         }),
+        addNewAircraft: builder.mutation({
+            query: initialAircraftData => ({
+                url: '/aircrafts',
+                method: 'POST',
+                body: {
+                    ...initialAircraftData,
+                }
+            }),
+            invalidatesTags: [
+                { type: 'Aircraft', id: "LIST" }
+            ]
+        }),
+        updateAircraft: builder.mutation({
+            query: initialAircraftData => ({
+                url: '/aircrafts',
+                method: 'PATCH',
+                body: {
+                    ...initialAircraftData,
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Aircraft', id: arg.id }
+            ]
+        }),
+        deleteAircraft: builder.mutation({
+            query: ({ id }) => ({
+                url: `/aircrafts`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Aircraft', id: arg.id }
+            ]
+        }),
     }),
 })
 // Automatically generated hook
 export const {
     useGetAircraftsQuery,
+    useAddNewAircraftMutation,
+    useUpdateAircraftMutation,
+    useDeleteAircraftMutation,
 } = aicraftsApiSlice
 
 // returns the query result object
