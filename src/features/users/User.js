@@ -13,14 +13,14 @@ const User = ({ userId }) => {
     if (user) {
         const handleEdit = () => navigate(`/home/users/${userId}`)
 
-        const userRolesString = user.roles.toString().replaceAll(',', ', ')
+        //const userRolesString = user.roles.toString().replaceAll(',', ', ')
 
         const cellStatus = user.active ? '' : 'table__cell--inactive'
 
         return (
             <tr className="table__row user">
                 <td className={`table__cell ${cellStatus}`}>{user.username}</td>
-                <td className={`table__cell ${cellStatus}`}>{userRolesString}</td>
+                <td className={`table__cell ${cellStatus}`}>{user.fullName}</td>
                 <td className={`table__cell ${cellStatus}`}>
                     <button
                         className="icon-button table__button"
