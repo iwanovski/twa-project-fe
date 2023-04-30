@@ -29,11 +29,48 @@ export const maintenancesApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'Maintenance', id: 'LIST' }]
             }
         }),
+        addNewMaintenance: builder.mutation({
+            query: initialMaintenanceData => ({
+                url: '/maintenances',
+                method: 'POST',
+                body: {
+                    ...initialMaintenanceData,
+                }
+            }),
+            invalidatesTags: [
+                { type: 'Maintenance', id: "LIST" }
+            ]
+        }),
+        updateMaintenance: builder.mutation({
+            query: initialMaintenanceData => ({
+                url: '/maintenances',
+                method: 'PATCH',
+                body: {
+                    ...initialMaintenanceData,
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Maintenance', id: arg.id }
+            ]
+        }),
+        deleteMaintenance: builder.mutation({
+            query: ({ id }) => ({
+                url: `/maintenances`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'Maintenance', id: arg.id }
+            ]
+        }),
     }),
 })
 // Automatically generated hook
 export const {
     useGetMaintenancesQuery,
+    useAddNewMaintenanceMutation,
+    useUpdateMaintenanceMutation,
+    useDeleteMaintenanceMutation,
 } = maintenancesApiSlice
 
 // returns the query result object

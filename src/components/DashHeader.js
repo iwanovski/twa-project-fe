@@ -1,15 +1,24 @@
 import { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons"
+import {
+    faFileCirclePlus,
+    faFilePen,
+    faUserGear,
+    faUserPlus,
+    faRightFromBracket
+} from "@fortawesome/free-solid-svg-icons"
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 
 import { useSendLogoutMutation } from '../features/auth/authApiSlice'
+
+import useAuth from '../hooks/useAuth'
 
 const HOME_REGEX = /^\/home(\/)?$/
 const NOTES_REGEX = /^\/home\/notes(\/)?$/
 const USERS_REGEX = /^\/home\/users(\/)?$/
 
 const DashHeader = () => {
+    const { isAdmin, isPlanner} = useAuth()
 
     const navigate = useNavigate()
     const { pathname } = useLocation()

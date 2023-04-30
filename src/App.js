@@ -34,6 +34,8 @@ import EditFlight from './features/flights/EditFlight'
 import NewFlightForm from './features/flights/NewFlightForm'
 
 import MaintenancesList from './features/maintenances/MaintenancesList'
+import EditMaintenance from './features/maintenances/EditMaintenance'
+import NewMaintenanceForm from './features/maintenances/NewMaintenanceForm'
 
 import Prefetch from './features/auth/Prefetch'
 import PersistLogin from './features/auth/PersistLogin'
@@ -94,6 +96,8 @@ function App() {
 
                     <Route path="maintenances">
                         <Route index element={<MaintenancesList />} />
+                        <Route path=":id" element={<EditMaintenance />}/>
+                        <Route path="new" element={<NewMaintenanceForm />}/>
                     </Route>
 
                   </Route>

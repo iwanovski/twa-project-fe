@@ -1,12 +1,19 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
+import { faPenToSquare, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+
+import Modal from '@mui/material/Modal';
+import UserModal from "./UserModal"
 
 import { useSelector } from 'react-redux'
 import { selectUserById } from './usersApiSlice'
 
 const User = ({ userId }) => {
     const user = useSelector(state => selectUserById(state, userId))
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     const navigate = useNavigate()
 
@@ -22,12 +29,37 @@ const User = ({ userId }) => {
                 <td className={`table__cell ${cellStatus}`}>{user.username}</td>
                 <td className={`table__cell ${cellStatus}`}>{user.fullName}</td>
                 <td className={`table__cell ${cellStatus}`}>
+                <div style={{ display: "flex" }}>
+                    <button
+                        className="icon-button table__button"
+                        onClick={handleOpen}
+                    >
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            slotProps={{
+                                BackdropProps: {
+                                    onClick: handleClose
+                                    }
+                                }}
+                        >
+                            <UserModal
+                                open={open}
+                                handleClose={() => setOpen(false)}
+                                user={user}
+                            />
+                        </Modal>
+                    </button>
                     <button
                         className="icon-button table__button"
                         onClick={handleEdit}
                     >
                         <FontAwesomeIcon icon={faPenToSquare} />
                     </button>
+                    </div>
                 </td>
             </tr>
         )

@@ -1,12 +1,19 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
+import { faPenToSquare, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+
+import Modal from '@mui/material/Modal';
+import MaintenanceModal from "./MaintenanceModal"
 
 import { useSelector } from 'react-redux'
 import { selectMaintenanceById } from './maintenancesApiSlice'
 
 const Maintenance = ({ maintenanceId }) => {
     const maintenance = useSelector(state => selectMaintenanceById(state, maintenanceId))
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     const navigate = useNavigate()
 
@@ -22,12 +29,37 @@ const Maintenance = ({ maintenanceId }) => {
                 <td className={`table__cell ${cellStatus}`}>{maintenance.mechanicCrewId}</td>
                 <td className={`table__cell ${cellStatus}`}>{maintenance.date}</td>
                 <td className={`table__cell ${cellStatus}`}>
+                <div style={{ display: "flex" }}>
+                    <button
+                        className="icon-button table__button"
+                        onClick={handleOpen}
+                    >
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            slotProps={{
+                                BackdropProps: {
+                                    onClick: handleClose
+                                    }
+                                }}
+                        >
+                            <MaintenanceModal
+                                open={open}
+                                handleClose={() => setOpen(false)}
+                                maintenance={maintenance}
+                            />
+                        </Modal>
+                    </button>
                     <button
                         className="icon-button table__button"
                         onClick={handleEdit}
                     >
                         <FontAwesomeIcon icon={faPenToSquare} />
                     </button>
+                    </div>
                 </td>
             </tr>
         )

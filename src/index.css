@@ -138,7 +138,7 @@ a:focus-visible {
 }
 
 .welcome a::before {
-  content: "➜ "
+  content: ""
 }
 
 /* || DASH HEADER, CONTAINER & FOOTER */

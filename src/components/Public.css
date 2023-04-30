@@ -1,0 +1,80 @@
+.public {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .public header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  
+  .public header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+  
+  .public p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  
+  .public__addr {
+    font-size: 1.2rem;
+    line-height: 1.5;
+  }
+  
+  .public footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  
+  .public button {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 24px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    background-color: #3f51b5;
+    color: #fff;
+    border: none;
+  }
+  
+  .public button:hover {
+    background-color: #2c3e50;
+  }
+  
+  .public__addr h2 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  .public__footer .public__login-btn {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 24px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    background-color: #3f51b5;
+    color: #fff;
+  }
+  
+  .public__footer .public__login-btn:hover {
+    background-color: #2c3e50;
+  }
+  
+  
