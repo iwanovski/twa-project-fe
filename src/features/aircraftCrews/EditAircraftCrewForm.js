@@ -2,7 +2,8 @@ import { useState, useEffect } from "react"
 import { useUpdateAircraftCrewMutation, useDeleteAircraftCrewMutation } from "./aircraftCrewsApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons"
+import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import Select from "react-select"
 
 const NAME_REGEX = /^[A-z0-9 ]{3,30}$/
 
@@ -27,7 +28,14 @@ const EditAircraftCrewForm = ({ aircraftCrew }) => {
     const [validName, setValidName] = useState(false)
     const [mainPilotId, setMainPilotId] = useState(aircraftCrew.mainPilotId)
     const [secondPilotId, setSecondPilotId] = useState(aircraftCrew.secondPilotId)
-    const members = []
+    const [ids, setIds] = useState(aircraftCrew.memberIds);
+
+    let prepareOptions = [];
+    for (const memberId of aircraftCrew.memberIds) {
+        prepareOptions.push({"label": memberId, "value": memberId})
+    }
+    const [options, setOptions] = useState(prepareOptions);
+    const aircraftCrewId = aircraftCrew._id
 
     useEffect(() => {
         setValidName(NAME_REGEX.test(name))
@@ -49,11 +57,36 @@ const EditAircraftCrewForm = ({ aircraftCrew }) => {
     const onSecondPilotIdChanged = e => setSecondPilotId(e.target.value)
 
     const onSaveAircraftCrewClicked = async (e) => {
-        await updateAircraftCrew({ id: aircraftCrew.id, name, mainPilotId, secondPilotId, members })
+        await updateAircraftCrew({ id: aircraftCrew.id, name, mainPilotId, secondPilotId, memberIds: ids })
     }
 
     const onDeleteAircraftCrewClicked = async () => {
         await deleteAircraftCrew({ id: aircraftCrew.id })
+    }
+
+    const onGoBackClicked = async () => {
+        navigate('/home/aircraftCrews')
+    }
+
+    const onMemberIdsChange = async (selectedOptions) => {
+        const selectedIds = selectedOptions.map((option) => option.value);
+        setIds(selectedIds);
+    }
+    
+    const handleAddId = async () => {
+        const newId = prompt('Enter new ID:');
+        if (newId && !options.some((option) => option.value === newId)) {
+            setOptions([...options, { value: newId, label: newId }]);
+        }
+    }
+    
+    const handleRemoveId = async () => {
+        const confirmed = window.confirm('Are you sure you want to remove the selected IDs?');
+        if (confirmed) {
+          const remainingOptions = options.filter((option) => !ids.includes(option.value));
+          setOptions(remainingOptions);
+          setIds([]);
+        }
     }
 
     let canSave = [validName].every(Boolean) && !isLoading
@@ -70,6 +103,15 @@ const EditAircraftCrewForm = ({ aircraftCrew }) => {
 
             <form className="form" onSubmit={e => e.preventDefault()}>
                 <div className="form__title-row">
+                    <div className="form__action-buttons">
+                        <button
+                            className="icon-button"
+                            title="Back"
+                            onClick={onGoBackClicked}
+                        >
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </button>
+                    </div>
                     <h2>Edit aircraft crew</h2>
                     <div className="form__action-buttons">
                         <button
@@ -102,6 +144,19 @@ const EditAircraftCrewForm = ({ aircraftCrew }) => {
                     onChange={onNameChanged}
                 />
 
+                <label className="form__label" htmlFor="id">
+                    Id: <span className="nowrap"></span></label>
+                <input
+                    className={`form__input`}
+                    id="aircraftCrewId"
+                    name="aircraftCrewId"
+                    type="text"
+                    autoComplete="off"
+                    value={aircraftCrewId}
+                    readOnly
+                    style={{ backgroundColor: '#dcdcdc', cursor: 'not-allowed' }}
+                />
+
                 <label className="form__label" htmlFor="mainPilotId">
                     MainPilotId: <span className="nowrap">[]</span></label>
                 <input
@@ -126,6 +181,21 @@ const EditAircraftCrewForm = ({ aircraftCrew }) => {
                     onChange={onSecondPilotIdChanged}
                 />
 
+                <label className="form__label" htmlFor="ids">
+                    IDs:
+                </label>
+                <Select
+                    id="memberIds"
+                    name="memberIds"
+                    options={options}
+                    isMulti
+                    value={options.filter((option) => ids.includes(option.value))}
+                    onChange={onMemberIdsChange}
+                />
+                <div>
+                    <button onClick={handleAddId}>Add ID</button>
+                    <button onClick={handleRemoveId}>Remove Selected IDs</button>
+                </div>
             </form>
         </>
     )

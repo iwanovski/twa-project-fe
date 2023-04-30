@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useUpdateFlightMutation, useDeleteFlightMutation } from "./flightsApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons"
+import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
 
@@ -80,6 +80,10 @@ const EditFlightForm = ({ flight }) => {
         await deleteFlight({ id: flight.id })
     }
 
+    const onGoBackClicked = async () => {
+        navigate('/home/flights')
+    }
+
     let canSave = [validCode, validAircraftCode, validDepartureAirportCode, validArrivalAirportCode].every(Boolean) && !isLoading
 
     const errClass = (isError || isDelError) ? "errmsg" : "offscreen"
@@ -97,6 +101,15 @@ const EditFlightForm = ({ flight }) => {
 
             <form className="form" onSubmit={e => e.preventDefault()}>
                 <div className="form__title-row">
+                    <div className="form__action-buttons">
+                        <button
+                            className="icon-button"
+                            title="Back"
+                            onClick={onGoBackClicked}
+                        >
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </button>
+                    </div>
                     <h2>Edit flight</h2>
                     <div className="form__action-buttons">
                         <button

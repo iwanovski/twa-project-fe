@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useUpdateAirportMutation, useDeleteAirportMutation } from "./airportsApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons"
+import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 
 const NAME_REGEX = /^[A-z0-9 ]{3,30}$/
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
@@ -61,6 +61,10 @@ const EditAirportForm = ({ airport }) => {
         await deleteAirport({ id: airport.id })
     }
 
+    const onGoBackClicked = async () => {
+        navigate('/home/airports')
+    }
+
     let canSave = [validCode, validFullName].every(Boolean) && !isLoading
 
     const errClass = (isError || isDelError) ? "errmsg" : "offscreen"
@@ -76,6 +80,15 @@ const EditAirportForm = ({ airport }) => {
 
             <form className="form" onSubmit={e => e.preventDefault()}>
                 <div className="form__title-row">
+                    <div className="form__action-buttons">
+                        <button
+                            className="icon-button"
+                            title="Back"
+                            onClick={onGoBackClicked}
+                        >
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </button>
+                    </div>
                     <h2>Edit airport</h2>
                     <div className="form__action-buttons">
                         <button
@@ -109,7 +122,7 @@ const EditAirportForm = ({ airport }) => {
                 />
 
                 <label className="form__label" htmlFor="code">
-                    Code: <span className="nowrap">[Unique code]</span></label>
+                    Code: <span className="nowrap">[Not editable]</span></label>
                 <input
                     className={`form__input ${validCodeClass}`}
                     id="code"
@@ -118,6 +131,8 @@ const EditAirportForm = ({ airport }) => {
                     autoComplete="off"
                     value={code}
                     onChange={onCodeChanged}
+                    readOnly
+                    style={{ backgroundColor: '#dcdcdc', cursor: 'not-allowed' }}
                 />
 
                 <label className="form__label" htmlFor="address">

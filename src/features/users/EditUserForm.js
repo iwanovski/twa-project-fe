@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons"
+import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 
 const USER_REGEX = /^[A-z0-9]{3,20}$/
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
@@ -34,7 +34,6 @@ const EditUserForm = ({ user }) => {
     const [validEmail, setValidEmail] = useState(false)
     const [fullName, setFullName] = useState(user.fullName)
     const [validFullName, setValidFullName] = useState(false)
-    const [active, setActive] = useState(user.active)
 
     useEffect(() => {
         setValidUsername(USER_REGEX.test(username))
@@ -69,20 +68,22 @@ const EditUserForm = ({ user }) => {
     const onEmailChanged = e => setEmail(e.target.value)
     const onFullNameChanged = e => setFullName(e.target.value)
 
-    const onActiveChanged = () => setActive(prev => !prev)
-
     const roles = []
 
     const onSaveUserClicked = async (e) => {
         if (password) {
-            await updateUser({ id: user.id, username, password, email, fullName, active, roles })
+            await updateUser({ id: user.id, username, password, email, fullName, roles })
         } else {
-            await updateUser({ id: user.id, username, email, fullName, active, roles })
+            await updateUser({ id: user.id, username, email, fullName, roles })
         }
     }
 
     const onDeleteUserClicked = async () => {
         await deleteUser({ id: user.id })
+    }
+
+    const onGoBackClicked = async () => {
+        navigate('/home/users')
     }
 
     let canSave
@@ -107,6 +108,15 @@ const EditUserForm = ({ user }) => {
 
             <form className="form" onSubmit={e => e.preventDefault()}>
                 <div className="form__title-row">
+                    <div className="form__action-buttons">
+                        <button
+                            className="icon-button"
+                            title="Back"
+                            onClick={onGoBackClicked}
+                        >
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </button>
+                    </div>
                     <h2>Edit User</h2>
                     <div className="form__action-buttons">
                         <button
@@ -173,18 +183,6 @@ const EditUserForm = ({ user }) => {
                     value={fullName}
                     onChange={onFullNameChanged}
                 />
-
-                <label className="form__label form__checkbox-container" htmlFor="user-active">
-                    ACTIVE:
-                    <input
-                        className="form__checkbox"
-                        id="user-active"
-                        name="user-active"
-                        type="checkbox"
-                        checked={active}
-                        onChange={onActiveChanged}
-                    />
-                </label>
 
             </form>
         </>

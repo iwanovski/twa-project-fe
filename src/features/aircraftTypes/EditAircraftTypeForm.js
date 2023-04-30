@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useUpdateAircraftTypeMutation, useDeleteAircraftTypeMutation } from "./aircraftTypesApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons"
+import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 
 const NAME_REGEX = /^[A-z0-9 ]{3,30}$/
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
@@ -70,6 +70,10 @@ const EditAircraftTypeForm = ({ aircraftType }) => {
         await deleteAircraftType({ id: aircraftType.id })
     }
 
+    const onGoBackClicked = async () => {
+        navigate('/home/aircraftTypes')
+    }
+
     let canSave = [validName, validCode].every(Boolean) && !isLoading
 
     const errClass = (isError || isDelError) ? "errmsg" : "offscreen"
@@ -85,6 +89,15 @@ const EditAircraftTypeForm = ({ aircraftType }) => {
 
             <form className="form" onSubmit={e => e.preventDefault()}>
                 <div className="form__title-row">
+                    <div className="form__action-buttons">
+                        <button
+                            className="icon-button"
+                            title="Back"
+                            onClick={onGoBackClicked}
+                        >
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </button>
+                    </div>
                     <h2>Edit aircraftType</h2>
                     <div className="form__action-buttons">
                         <button
@@ -127,6 +140,8 @@ const EditAircraftTypeForm = ({ aircraftType }) => {
                     autoComplete="off"
                     value={code}
                     onChange={onCodeChanged}
+                    readOnly
+                    style={{ backgroundColor: '#dcdcdc', cursor: 'not-allowed' }}
                 />
 
                 <label className="form__label" htmlFor="weight">
