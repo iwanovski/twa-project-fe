@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useAddNewAircraftMutation } from "./aircraftsApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSave } from "@fortawesome/free-solid-svg-icons"
+import { faSave, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
 const AIRPORT_CODE_REGEX = /^[A-z0-9 -]{3,5}$/
@@ -59,6 +59,10 @@ const NewAircraftForm = () => {
       }
   }
 
+  const onGoBackClicked = async () => {
+    navigate('/home/aircrafts')
+  }
+
   const errClass = isError ? "errmsg" : "offscreen"
   const validCodeClass = !validCode ? 'form__input--incomplete' : ''
   const validAircraftTypeCodeClass = !validCode ? 'form__input--incomplete' : ''
@@ -70,6 +74,15 @@ const NewAircraftForm = () => {
 
         <form className="form" onSubmit={onSaveAircraftClicked}>
             <div className="form__title-row">
+                <div className="form__action-buttons">
+                    <button
+                      className="icon-button"
+                        title="Back"
+                        onClick={onGoBackClicked}
+                    >
+                    <FontAwesomeIcon icon={faArrowLeft} />
+                    </button>
+                  </div>
                 <h2>Create new aircraft</h2>
                 <div className="form__action-buttons">
                     <button

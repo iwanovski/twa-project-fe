@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useAddNewUserMutation } from "./usersApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSave } from "@fortawesome/free-solid-svg-icons"
+import { faSave, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
 import { ROLES } from "../../config/roles"
 
 // Just default regex without regarding safety
@@ -81,6 +81,10 @@ const NewUserForm = () => {
       }
   }
 
+  const onGoBackClicked = async () => {
+    navigate('/home/users')
+  }
+
   const options = Object.values(ROLES).map(role => {
     return (
         <option
@@ -104,6 +108,15 @@ const NewUserForm = () => {
 
         <form className="form" onSubmit={onSaveUserClicked}>
             <div className="form__title-row">
+                <div className="form__action-buttons">
+                        <button
+                            className="icon-button"
+                            title="Back"
+                            onClick={onGoBackClicked}
+                        >
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </button>
+                </div>
                 <h2>New User</h2>
                 <div className="form__action-buttons">
                     <button
