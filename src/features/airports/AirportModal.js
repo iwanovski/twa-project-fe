@@ -58,6 +58,9 @@ export default function AirportModal({ open, handleClose, airport }) {
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           ManagerId: {airport.managerId}
         </Typography>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          PlannerIds: {airport.plannerIds}
+        </Typography>
       </Box>
     </Modal>
   );

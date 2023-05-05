@@ -3,6 +3,7 @@ import { useAddNewFlightMutation } from "./flightsApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import useAuth from "../../hooks/useAuth"
 
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
 
@@ -14,6 +15,8 @@ const NewFlightForm = () => {
     isError,
     error
   }] = useAddNewFlightMutation()
+
+  const { id } = useAuth()
 
   const navigate = useNavigate()
 
@@ -27,7 +30,6 @@ const NewFlightForm = () => {
   const [arrivalAirportCode, setArrivalAirportCode] = useState('')
   const [validArrivalAirportCode, setValidArrivalAirportCode] = useState(false)
   const [date, setDate] = useState('1970-01-01')
-  const plannedBy = "test"
 
   useEffect(() => {
     setValidCode(CODE_REGEX.test(code))
@@ -69,7 +71,7 @@ const NewFlightForm = () => {
   const onSaveFlightClicked = async (e) => {
       e.preventDefault()
       if (canSave) {
-          await addNewFlight({ code, aircraftCrewId, departureAirportCode, arrivalAirportCode, plannedBy, date })
+          await addNewFlight({ code, aircraftCode ,aircraftCrewId, departureAirportCode, arrivalAirportCode, plannedBy: id, date })
       }
   }
 

@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
+import useAuth from '../../hooks/useAuth';
 
 import Modal from '@mui/material/Modal';
 import AirportModal from "./AirportModal"
@@ -14,6 +15,8 @@ const Airport = ({ airportId }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const { isAdmin, isAirportsAdmin, isAirportManager  } = useAuth()
 
     const navigate = useNavigate()
 
@@ -52,12 +55,12 @@ const Airport = ({ airportId }) => {
                             />
                         </Modal>
                     </button>
-                    <button
+                    {(isAdmin || isAirportsAdmin || isAirportManager) && <button
                         className="icon-button table__button"
                         onClick={handleEdit}
                     >
                         <FontAwesomeIcon icon={faPenToSquare} />
-                    </button>
+                    </button>}
                     </div>
                 </td>
             </tr>

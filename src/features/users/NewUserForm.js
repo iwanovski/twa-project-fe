@@ -7,7 +7,7 @@ import { ROLES } from "../../config/roles"
 
 // Just default regex without regarding safety
 const USER_REGEX = /^[A-z0-9]{3,20}$/
-const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
+const PWD_REGEX = /^[A-z0-9!@#$%]{4,25}$/
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 const FULL_NAME_REGEX = /^[A-z0-9 ]{3,50}$/
 
@@ -72,7 +72,7 @@ const NewUserForm = () => {
     setRoles(values)
   }
 
-  const canSave = [validUsername, validPassword, validEmail, validFullName, roles.length].every(Boolean) && !isLoading
+  const canSave = [validUsername, validPassword, validEmail, validFullName, roles.length, roles.length < 2].every(Boolean) && !isLoading
 
   const onSaveUserClicked = async (e) => {
       e.preventDefault()
@@ -93,7 +93,7 @@ const NewUserForm = () => {
 
         > {role}</option >
     )
-})
+  })
 
   const errClass = isError ? "errmsg" : "offscreen"
   const validUserClass = !validUsername ? 'form__input--incomplete' : ''
@@ -175,7 +175,7 @@ const NewUserForm = () => {
             />
 
             <label className="form__label" htmlFor="roles">
-                    ASSIGNED ROLES:</label>
+                    Role:</label>
                 <select
                     id="roles"
                     name="roles"

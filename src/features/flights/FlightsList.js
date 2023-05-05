@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useGetFlightsQuery } from "./flightsApiSlice"
 import Flight from "./Flight"
+import useAuth from '../../hooks/useAuth'
 
 const FlightsList = () => {
 
@@ -13,6 +14,8 @@ const FlightsList = () => {
   } = useGetFlightsQuery()
 
   const navigate = useNavigate()
+
+  const { isAdmin, isPlanner} = useAuth()
 
   let content
 
@@ -40,18 +43,18 @@ const FlightsList = () => {
                       <th scope="col" className="table__th user__roles">Departure from</th>
                       <th scope="col" className="table__th user__edit">Arrival at</th>
                       <th scope="col" className="table__th user__edit">Date</th>
-                      <th scope="col" className="table__th user__edit">Edit</th>
+                      <th scope="col" className="table__th user__edit">Detail/Edit</th>
                   </tr>
               </thead>
               <tbody>
                   {tableContent}
               </tbody>
               <tfoot>
-                <tr>
+                {(isAdmin || isPlanner) && <tr>
                     <td colSpan="1">
                         <button onClick={handleButtonClick}>Schedule flight</button>
                     </td>
-                </tr>
+                </tr>}
               </tfoot>
           </table>
       )

@@ -3,6 +3,7 @@ import { useUpdateFlightMutation, useDeleteFlightMutation } from "./flightsApiSl
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import useAuth from "../../hooks/useAuth"
 
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
 
@@ -21,6 +22,8 @@ const EditFlightForm = ({ flight }) => {
         error: delerror
     }] = useDeleteFlightMutation()
 
+    const { id } = useAuth()
+
     const navigate = useNavigate()
 
     const [code, setCode] = useState(flight.code)
@@ -33,7 +36,7 @@ const EditFlightForm = ({ flight }) => {
     const [arrivalAirportCode, setArrivalAirportCode] = useState(flight.arrivalAirportCode)
     const [validArrivalAirportCode, setValidArrivalAirportCode] = useState(false)
     const [date, setDate] = useState(flight.date)
-    const plannedBy = "test"
+    const plannedBy = id
 
     useEffect(() => {
         setValidCode(CODE_REGEX.test(code))
@@ -52,7 +55,6 @@ const EditFlightForm = ({ flight }) => {
     }, [arrivalAirportCode])
 
     useEffect(() => {
-        console.log(isSuccess)
         if (isSuccess || isDelSuccess) {
             setCode('')
             setAircraftCrewId('')
@@ -73,7 +75,7 @@ const EditFlightForm = ({ flight }) => {
     const onDateChanged = e => setDate(e.target.value)
 
     const onSaveFlightClicked = async (e) => {
-        await updateFlight({ id: flight.id, code, aircraftCrewId, departureAirportCode, arrivalAirportCode, plannedBy, date })
+        await updateFlight({ id: flight.id, code, aircraftCode, aircraftCrewId, departureAirportCode, arrivalAirportCode, plannedBy, date })
     }
 
     const onDeleteFlightClicked = async () => {

@@ -3,6 +3,7 @@ import { useAddNewMaintenanceMutation } from "./maintenancesApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import useAuth from "../../hooks/useAuth"
 
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
 
@@ -15,6 +16,8 @@ const NewMaintenanceForm = () => {
     error
   }] = useAddNewMaintenanceMutation()
 
+  const { id } = useAuth()
+
   const navigate = useNavigate()
 
   const [aircraftCode, setAircraftCode] = useState('')
@@ -23,7 +26,6 @@ const NewMaintenanceForm = () => {
   const [airportCode, setAirportCode] = useState('')
   const [validAirportCode, setValidAirportCode] = useState(false)
   const [date, setDate] = useState('1970-01-01')
-  const plannedBy = "test"
 
   useEffect(() => {
     setValidAircraftCode(CODE_REGEX.test(aircraftCode))
@@ -52,7 +54,7 @@ const NewMaintenanceForm = () => {
   const onSaveMaintenanceClicked = async (e) => {
       e.preventDefault()
       if (canSave) {
-          await addNewMaintenance({ mechanicCrewId, airportCode, plannedBy, date })
+          await addNewMaintenance({ mechanicCrewId, airportCode, aircraftCode, plannedBy: id, date, userId: id })
       }
   }
 

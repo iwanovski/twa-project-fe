@@ -42,11 +42,11 @@ const EditAircraftCrewForm = ({ aircraftCrew }) => {
     }, [name])
 
     useEffect(() => {
-        console.log(isSuccess)
         if (isSuccess || isDelSuccess) {
             setName('')
             setMainPilotId('')
             setSecondPilotId('')
+            setIds([])
             navigate('/home/aircraftCrews')
         }
 

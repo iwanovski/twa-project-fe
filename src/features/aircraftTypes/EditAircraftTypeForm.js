@@ -42,7 +42,6 @@ const EditAircraftTypeForm = ({ aircraftType }) => {
     }, [code])
 
     useEffect(() => {
-        console.log(isSuccess)
         if (isSuccess || isDelSuccess) {
             setName('')
             setCode('')

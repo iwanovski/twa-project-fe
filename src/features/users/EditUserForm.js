@@ -3,13 +3,16 @@ import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice"
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import useAuth from "../../hooks/useAuth"
+import { ROLES } from "../../config/roles"
 
 const USER_REGEX = /^[A-z0-9]{3,20}$/
-const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
+const PWD_REGEX = /^[A-z0-9!@#$%]{4,25}$/
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 const FULL_NAME_REGEX = /^[A-z0-9 ]{3,50}$/
 
 const EditUserForm = ({ user }) => {
+    const { isAdmin, id } = useAuth()
 
     const [updateUser, {
         isLoading,
@@ -34,6 +37,8 @@ const EditUserForm = ({ user }) => {
     const [validEmail, setValidEmail] = useState(false)
     const [fullName, setFullName] = useState(user.fullName)
     const [validFullName, setValidFullName] = useState(false)
+    const [roles, setRoles] = useState(user.roles)
+    const originalRoles = user.roles
 
     useEffect(() => {
         setValidUsername(USER_REGEX.test(username))
@@ -52,12 +57,12 @@ const EditUserForm = ({ user }) => {
     }, [fullName])
 
     useEffect(() => {
-        console.log(isSuccess)
         if (isSuccess || isDelSuccess) {
             setUsername('')
             setPassword('')
             setEmail('')
             setFullName('')
+            setRoles([])
             navigate('/home/users')
         }
 
@@ -68,13 +73,22 @@ const EditUserForm = ({ user }) => {
     const onEmailChanged = e => setEmail(e.target.value)
     const onFullNameChanged = e => setFullName(e.target.value)
 
-    const roles = []
+    const onRolesChanged = e => {
+        const values = Array.from(
+            e.target.selectedOptions, //HTMLCollection 
+            (option) => option.value
+        )
+        setRoles(values)
+    }
 
     const onSaveUserClicked = async (e) => {
+        if (!isAdmin) {
+            setRoles(originalRoles)
+        }
         if (password) {
-            await updateUser({ id: user.id, username, password, email, fullName, roles })
+            await updateUser({ id: user.id, username, password, email, fullName, roles, userId: id })
         } else {
-            await updateUser({ id: user.id, username, email, fullName, roles })
+            await updateUser({ id: user.id, username, email, fullName, roles,  userId: id })
         }
     }
 
@@ -86,11 +100,21 @@ const EditUserForm = ({ user }) => {
         navigate('/home/users')
     }
 
+    const options = Object.values(ROLES).map(role => {
+        return (
+            <option
+                key={role}
+                value={role}
+    
+            > {role}</option >
+        )
+      })
+
     let canSave
     if (password) {
-        canSave = [validUsername, validPassword, validEmail, validFullName].every(Boolean) && !isLoading
+        canSave = [validUsername, validPassword, validEmail, validFullName, roles.length, roles.length < 2].every(Boolean) && !isLoading
     } else {
-        canSave = [validUsername, validEmail, validFullName].every(Boolean) && !isLoading
+        canSave = [validUsername, validEmail, validFullName, roles.length, roles.length < 2].every(Boolean) && !isLoading
     }
 
     const errClass = (isError || isDelError) ? "errmsg" : "offscreen"
@@ -98,6 +122,7 @@ const EditUserForm = ({ user }) => {
     const validPwdClass = password && !validPassword ? 'form__input--incomplete' : ''
     const validEmailClass = !validEmail ? 'form__input--incomplete' : ''
     const validFullNameClass = !validFullName ? 'form__input--incomplete' : ''
+    const validRolesClass = !Boolean(roles.length) ? 'form__input--incomplete' : ''
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
 
@@ -183,6 +208,20 @@ const EditUserForm = ({ user }) => {
                     value={fullName}
                     onChange={onFullNameChanged}
                 />
+
+                {isAdmin && <p><label className="form__label" htmlFor="roles">
+                    Role:</label>
+                <select
+                    id="roles"
+                    name="roles"
+                    className={`form__select ${validRolesClass}`}
+                    multiple={true}
+                    size="13"
+                    value={roles}
+                    onChange={onRolesChanged}
+                >
+                    {options}
+                </select></p>}
 
             </form>
         </>

@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
+import useAuth from '../../hooks/useAuth';
 
 import Modal from '@mui/material/Modal';
 import MechanicCrewModal from "./MechanicCrewModal"
@@ -13,6 +14,8 @@ const MechanicCrew = ({ mechanicCrewId }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    
+    const { isAdmin, isMechanicCrewAdmin } = useAuth()
 
     const navigate = useNavigate()
 
@@ -50,12 +53,12 @@ const MechanicCrew = ({ mechanicCrewId }) => {
                             />
                         </Modal>
                     </button>
-                    <button
+                    {(isAdmin || isMechanicCrewAdmin) && <button
                         className="icon-button table__button"
                         onClick={handleEdit}
                     >
                         <FontAwesomeIcon icon={faPenToSquare} />
-                    </button>
+                    </button>}
                     </div>
                 </td>
             </tr>

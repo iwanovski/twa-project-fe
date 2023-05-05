@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useGetAircraftTypesQuery } from "./aircraftTypesApiSlice"
 import AircraftType from "./AircraftType"
+import useAuth from '../../hooks/useAuth'
 
 const AircraftTypesList = () => {
 
@@ -13,6 +14,8 @@ const AircraftTypesList = () => {
   } = useGetAircraftTypesQuery()
 
   const navigate = useNavigate()
+
+  const { isAdmin, isAircraftController } = useAuth()
 
   let content
 
@@ -45,11 +48,11 @@ const AircraftTypesList = () => {
                   {tableContent}
               </tbody>
               <tfoot>
-                <tr>
+                {(isAdmin || isAircraftController) && <tr>
                     <td colSpan="1">
                         <button onClick={handleButtonClick}>Create new aircraftType</button>
                     </td>
-                </tr>
+                </tr>}
               </tfoot>
           </table>
       )

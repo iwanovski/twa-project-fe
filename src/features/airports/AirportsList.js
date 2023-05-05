@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useGetAirportsQuery } from "./airportsApiSlice"
 import Airport from "./Airport"
+import useAuth from '../../hooks/useAuth'
 
 const AirportsList = () => {
 
@@ -13,6 +14,8 @@ const AirportsList = () => {
   } = useGetAirportsQuery()
 
   const navigate = useNavigate()
+
+  const { isAdmin, isAirportsAdmin, isAirportManager  } = useAuth()
 
   let content
 
@@ -45,11 +48,11 @@ const AirportsList = () => {
                   {tableContent}
               </tbody>
               <tfoot>
-                <tr>
+                {(isAdmin || isAirportsAdmin || isAirportManager) && <tr>
                     <td colSpan="1">
                         <button onClick={handleButtonClick}>Create new airport</button>
                     </td>
-                </tr>
+                </tr>}
               </tfoot>
           </table>
       )

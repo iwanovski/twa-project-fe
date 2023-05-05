@@ -3,6 +3,8 @@ import { useUpdateAirportMutation, useDeleteAirportMutation } from "./airportsAp
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import Select from "react-select"
+import useAuth from "../../hooks/useAuth"
 
 const NAME_REGEX = /^[A-z0-9 ]{3,30}$/
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
@@ -24,11 +26,21 @@ const EditAirportForm = ({ airport }) => {
 
     const navigate = useNavigate()
 
+    const { id } = useAuth()
+
     const [fullName, setFullName] = useState(airport.fullName)
     const [validFullName, setValidFullName] = useState(false)
     const [code, setCode] = useState(airport.code)
     const [validCode, setValidCode] = useState(false)
     const [address, setAddress] = useState(airport.address)
+    const [managerId, setManagerId] = useState(airport.managerId)
+    const [plannerIds, setPlannerIds] = useState(airport.plannerIds);
+
+    let prepareOptions = [];
+    for (const plannerId of airport.plannerIds) {
+        prepareOptions.push({"label": plannerId, "value": plannerId})
+    }
+    const [options, setOptions] = useState(prepareOptions);
 
     useEffect(() => {
         setValidFullName(NAME_REGEX.test(fullName))
@@ -39,11 +51,12 @@ const EditAirportForm = ({ airport }) => {
     }, [code])
 
     useEffect(() => {
-        console.log(isSuccess)
         if (isSuccess || isDelSuccess) {
             setFullName('')
             setCode('')
             setAddress('')
+            setManagerId('')
+            setPlannerIds([])
             navigate('/home/airports')
         }
 
@@ -52,9 +65,10 @@ const EditAirportForm = ({ airport }) => {
     const onFullNameChanged = e => setFullName(e.target.value)
     const onCodeChanged = e => setCode(e.target.value)
     const onAddressChanged = e => setAddress(e.target.value)
+    const onManagerIdChanged = e => setManagerId(e.target.value)
 
     const onSaveAirportClicked = async (e) => {
-        await updateAirport({ id: airport.id, fullName, code, address })
+        await updateAirport({ id: airport.id, fullName, address, managerId, plannerIds, userId: id })
     }
 
     const onDeleteAirportClicked = async () => {
@@ -65,11 +79,31 @@ const EditAirportForm = ({ airport }) => {
         navigate('/home/airports')
     }
 
+    const onPlannerIdsChange = async (selectedOptions) => {
+        const selectedIds = selectedOptions.map((option) => option.value);
+        setPlannerIds(selectedIds);
+      }
+    
+    const handleAddId = async () => {
+    const newId = prompt('Enter new ID:');
+    if (newId && !options.some((option) => option.value === newId)) {
+        setOptions([...options, { value: newId, label: newId }]);
+    }
+    }
+    
+    const handleRemoveId = async () => {
+    const confirmed = window.confirm('Are you sure you want to remove the selected IDs?');
+    if (confirmed) {
+        const remainingOptions = options.filter((option) => !plannerIds.includes(option.value));
+        setOptions(remainingOptions);
+        setPlannerIds([]);
+    }
+    }
+
     let canSave = [validCode, validFullName].every(Boolean) && !isLoading
 
     const errClass = (isError || isDelError) ? "errmsg" : "offscreen"
     const validFullNameClass = !validFullName ? 'form__input--incomplete' : ''
-    const validCodeClass = !validCode ? 'form__input--incomplete' : ''
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
 
@@ -122,9 +156,9 @@ const EditAirportForm = ({ airport }) => {
                 />
 
                 <label className="form__label" htmlFor="code">
-                    Code: <span className="nowrap">[Not editable]</span></label>
+                    Code: <span className="nowrap"></span></label>
                 <input
-                    className={`form__input ${validCodeClass}`}
+                    className={`form__input`}
                     id="code"
                     name="code"
                     type="text"
@@ -146,6 +180,34 @@ const EditAirportForm = ({ airport }) => {
                     value={address}
                     onChange={onAddressChanged}
                 />
+
+<label className="form__label" htmlFor="managerId">
+                  ManagerId: <span className="nowrap"></span></label>
+                <input
+                    className={`form__input`}
+                    id="managerId"
+                    name="managerId"
+                    type="text"
+                    autoComplete="off"
+                    value={managerId}
+                    onChange={onManagerIdChanged}
+                />
+
+            <label className="form__label" htmlFor="plannerIds">
+                    PlannerIds:
+                </label>
+                <Select
+                    id="plannerIds"
+                    name="plannerIds"
+                    options={options}
+                    isMulti
+                    value={options.filter((option) => plannerIds.includes(option.value))}
+                    onChange={onPlannerIdsChange}
+                />
+                <div>
+                    <button onClick={handleAddId}>Add ID</button>
+                    <button onClick={handleRemoveId}>Remove Selected IDs</button>
+                </div>
 
             </form>
         </>

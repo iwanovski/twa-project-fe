@@ -8,6 +8,6 @@ export const ROLES = {
     MechanicCrewAdmin: 'MechanicCrewAdmin',
     Pilot: 'Pilot',
     Steward: 'Steward',
-    AicraftCrewAdmin: 'AircraftCrewAdmin',
+    AircraftCrewAdmin: 'AircraftCrewAdmin',
     Planner: 'Planner',
 }

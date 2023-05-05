@@ -3,6 +3,7 @@ import { useUpdateAircraftMutation, useDeleteAircraftMutation } from "./aircraft
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import useAuth from "../../hooks/useAuth"
 
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
 const AIRPORT_CODE_REGEX = /^[A-z0-9 -]{3,5}$/
@@ -24,17 +25,15 @@ const EditAircraftForm = ({ aircraft }) => {
 
     const navigate = useNavigate()
 
-    const [code, setCode] = useState(aircraft.code)
-    const [validCode, setValidCode] = useState(false)
+    const { id } = useAuth()
+
+    const code = aircraft.code
     const [aircraftTypeCode, setAircraftTypeCode] = useState(aircraft.aircraftTypeCode)
     const [validAircraftTypeCode, setValidAircraftTypeCode] = useState(false)
     const [homeAirportCode, setHomeAirportCode] = useState(aircraft.homeAirportCode)
     const [validHomeAirportCode, setValidHomeAirportCode] = useState(false)
+    const [maintainerId, setMaintainerId] = useState(aircraft.maintainerId)
 
-
-    useEffect(() => {
-        setValidCode(CODE_REGEX.test(code))
-    }, [code])
 
     useEffect(() => {
         setValidAircraftTypeCode(CODE_REGEX.test(aircraftTypeCode))
@@ -45,22 +44,21 @@ const EditAircraftForm = ({ aircraft }) => {
     }, [homeAirportCode])
 
     useEffect(() => {
-        console.log(isSuccess)
         if (isSuccess || isDelSuccess) {
-            setCode('')
             setAircraftTypeCode('')
             setHomeAirportCode('')
+            setMaintainerId('')
             navigate('/home/aircrafts')
         }
 
     }, [isSuccess, isDelSuccess, navigate])
 
-    const onCodeChanged = e => setCode(e.target.value)
     const onAircraftTypeCodeChanged = e => setAircraftTypeCode(e.target.value)
     const onHomeAirportCodeChanged = e => setHomeAirportCode(e.target.value)
+    const onMaintainerIdChanged = e => setMaintainerId(e.target.value)
 
     const onSaveAircraftClicked = async (e) => {
-        await updateAircraftType({ id: aircraft.id, code, aircraftTypeCode, homeAirportCode })
+        await updateAircraftType({ id: aircraft.id, aircraftTypeCode, homeAirportCode, maintainerId, userId: id })
     }
 
     const onDeleteAircraftClicked = async () => {
@@ -71,12 +69,11 @@ const EditAircraftForm = ({ aircraft }) => {
         navigate('/home/aircrafts')
     }
 
-    let canSave = [validCode, validAircraftTypeCode, validHomeAirportCode].every(Boolean) && !isLoading
+    let canSave = [validAircraftTypeCode, validHomeAirportCode].every(Boolean) && !isLoading
 
     const errClass = (isError || isDelError) ? "errmsg" : "offscreen"
-    const validCodeClass = !validCode ? 'form__input--incomplete' : ''
-    const validAircraftTypeCodeClass = !validCode ? 'form__input--incomplete' : ''
-    const validHomeAirportCodeClass = !validCode ? 'form__input--incomplete' : ''
+    const validAircraftTypeCodeClass = !validAircraftTypeCode ? 'form__input--incomplete' : ''
+    const validHomeAirportCodeClass = !validHomeAirportCode ? 'form__input--incomplete' : ''
 
     const errContent = (error?.data?.message || delerror?.data?.message) ?? ''
 
@@ -119,13 +116,14 @@ const EditAircraftForm = ({ aircraft }) => {
                 <label className="form__label" htmlFor="code">
                     Code: <span className="nowrap">[Unique code]</span></label>
                 <input
-                    className={`form__input ${validCodeClass}`}
+                    className={`form__input`}
                     id="code"
                     name="code"
                     type="text"
                     autoComplete="off"
+                    readOnly
+                    style={{ backgroundColor: '#dcdcdc', cursor: 'not-allowed' }}
                     value={code}
-                    onChange={onCodeChanged}
                 />
 
                 <label className="form__label" htmlFor="aircraftTypeCode">
@@ -150,6 +148,18 @@ const EditAircraftForm = ({ aircraft }) => {
                     autoComplete="off"
                     value={homeAirportCode}
                     onChange={onHomeAirportCodeChanged}
+                />
+
+                <label className="form__label" htmlFor="maintainerId">
+                  MaintainerId: <span className="nowrap"></span></label>
+                <input
+                    className={`form__input`}
+                    id="maintainerId"
+                    name="maintainerId"
+                    type="text"
+                    autoComplete="off"
+                    value={maintainerId}
+                    onChange={onMaintainerIdChanged}
                 />
 
             </form>

@@ -39,14 +39,20 @@ import NewMaintenanceForm from './features/maintenances/NewMaintenanceForm'
 
 import Prefetch from './features/auth/Prefetch'
 import PersistLogin from './features/auth/PersistLogin'
+import RequireAuth from './features/auth/RequireAuth'
+import { ROLES } from './config/roles'
 
 function App() {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
+                {/* Public routes */}
                 <Route index element={<Public />} />
                 <Route path="login" element={<Login />} />
+
+                {/* Protected routes */}
                 <Route element={<PersistLogin />}>
+                <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]}/>}>
                 <Route element={<Prefetch />}>
                   <Route path="home" element={<DashLayout />}>
 
@@ -55,51 +61,68 @@ function App() {
                     <Route path="users">
                         <Route index element={<UsersList />} />
                         <Route path=":id" element={<EditUser />}/>
-                        <Route path="new" element={<NewUserForm />}/>
+                        <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
+                          <Route path="new" element={<NewUserForm />}/>
+                        </Route>
                     </Route>
 
                     <Route path="aircraftTypes">
                         <Route index element={<AircraftTypesList />} />
-                        <Route path=":id" element={<EditAircraftType />}/>
-                        <Route path="new" element={<NewAircraftTypeForm />}/>
+                        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.AircraftController]}/>}>
+                          <Route path=":id" element={<EditAircraftType />}/>
+                          <Route path="new" element={<NewAircraftTypeForm />}/>
+                        </Route>
                     </Route>
 
                     <Route path="aircrafts">
                         <Route index element={<AircraftsList />} />
-                        <Route path=":id" element={<EditAircraft />}/>
-                        <Route path="new" element={<NewAircraftForm />}/>
+                        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.AircraftController, ROLES.AircraftMaintainer]}/>}>
+                          <Route path=":id" element={<EditAircraft />}/>
+                          <Route path="new" element={<NewAircraftForm />}/>
+                        </Route>
                     </Route>
                     
                     <Route path="airports">
                         <Route index element={<AirportsList />} />
-                        <Route path=":id" element={<EditAirport />}/>
-                        <Route path="new" element={<NewAirportForm />}/>
+                        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.AirportsAdmin, ROLES.AirportManager]}/>}>
+                          <Route path=":id" element={<EditAirport />}/>
+                          <Route path="new" element={<NewAirportForm />}/>
+                        </Route>
                     </Route>
 
                     <Route path="aircraftCrews">
                         <Route index element={<AircraftCrewsList />} />
-                        <Route path=":id" element={<EditAircraftCrew />}/>
-                        <Route path="new" element={<NewAircraftCrewForm />}/>
+                        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.AircraftCrewAdmin]}/>}>
+                          <Route path=":id" element={<EditAircraftCrew />}/>
+                          <Route path="new" element={<NewAircraftCrewForm />}/>
+                        </Route>
                     </Route>
 
                     <Route path="mechanicCrews">
                         <Route index element={<MechanicCrewsList />} />
-                        <Route path=":id" element={<EditMechanicCrew />}/>
-                        <Route path="new" element={<NewMechanicCrewForm />}/>
+                        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.MechanicCrewAdmin]}/>}>
+                          <Route path=":id" element={<EditMechanicCrew />}/>
+                          <Route path="new" element={<NewMechanicCrewForm />}/>
+                        </Route>
                     </Route>
 
                     <Route path="flights">
                         <Route index element={<FlightsList />} />
-                        <Route path=":id" element={<EditFlight />}/>
-                        <Route path="new" element={<NewFlightForm />}/>
+                        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Planner]}/>}>
+                          <Route path=":id" element={<EditFlight />}/>
+                          <Route path="new" element={<NewFlightForm />}/>
+                        </Route>
                     </Route>
 
                     <Route path="maintenances">
                         <Route index element={<MaintenancesList />} />
-                        <Route path=":id" element={<EditMaintenance />}/>
-                        <Route path="new" element={<NewMaintenanceForm />}/>
+                        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.AircraftMaintainer]}/>}>
+                          <Route path=":id" element={<EditMaintenance />}/>
+                          <Route path="new" element={<NewMaintenanceForm />}/>
+                        </Route>
                     </Route>
 
+                  </Route>
                   </Route>
                 </Route>
                 </Route>

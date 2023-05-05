@@ -55,6 +55,9 @@ export default function AircraftModal({ open, handleClose, aircraft }) {
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           HomeAirport: {aircraft.homeAirportCode}
         </Typography>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          MaintainerId: {aircraft.maintainerId}
+        </Typography>
       </Box>
     </Modal>
   );

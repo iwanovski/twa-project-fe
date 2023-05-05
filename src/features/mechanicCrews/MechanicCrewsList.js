@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useGetMechanicCrewsQuery } from "./mechanicCrewsApiSlice"
 import MechanicCrew from "./MechanicCrew"
+import useAuth from '../../hooks/useAuth'
 
 const MechanicCrewsList = () => {
 
@@ -13,6 +14,8 @@ const MechanicCrewsList = () => {
   } = useGetMechanicCrewsQuery()
 
   const navigate = useNavigate()
+
+  const { isAdmin, isMechanicCrewAdmin } = useAuth()
 
   let content
 
@@ -44,11 +47,11 @@ const MechanicCrewsList = () => {
                   {tableContent}
               </tbody>
               <tfoot>
-                <tr>
+                {(isAdmin || isMechanicCrewAdmin) && <tr>
                     <td colSpan="1">
                         <button onClick={handleButtonClick}>Create mechanicCrew</button>
                     </td>
-                </tr>
+                </tr>}
               </tfoot>
           </table>
       )

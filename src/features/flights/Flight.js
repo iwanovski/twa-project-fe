@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
+import useAuth from '../../hooks/useAuth';
 
 import Modal from '@mui/material/Modal';
 import FlightModal from "./FlightModal"
@@ -14,6 +15,8 @@ const Flight = ({ flightId }) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const { isAdmin, isPlanner} = useAuth()
 
     const navigate = useNavigate()
 
@@ -54,12 +57,12 @@ const Flight = ({ flightId }) => {
                             />
                         </Modal>
                     </button>
-                    <button
+                    {(isAdmin || isPlanner) && <button
                         className="icon-button table__button"
                         onClick={handleEdit}
                     >
                         <FontAwesomeIcon icon={faPenToSquare} />
-                    </button>
+                    </button>}
                     </div>
                 </td>
             </tr>

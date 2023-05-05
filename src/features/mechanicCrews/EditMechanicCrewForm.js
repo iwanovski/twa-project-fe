@@ -3,6 +3,7 @@ import { useUpdateMechanicCrewMutation, useDeleteMechanicCrewMutation } from "./
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import Select from "react-select"
 
 const NAME_REGEX = /^[A-z0-9 ]{3,30}$/
 
@@ -26,18 +27,31 @@ const EditMechanicCrewForm = ({ mechanicCrew }) => {
     const [name, setName] = useState(mechanicCrew.name)
     const [validName, setValidName] = useState(false)
     const [homeAirportCode, setHomeAirportCode] = useState(mechanicCrew.homeAirportCode)
-    const aircraftTypeCodes = []
-    const members = []
+    const [aircraftTypeCodes, setAircraftTypeCodes] = useState(mechanicCrew.aircraftTypeCodes)
+    const [memberIds, setMemberIds] = useState(mechanicCrew.memberIds)
+
+    let prepareTypesOptions = []
+    for (const typeCode of mechanicCrew.aircraftTypeCodes) {
+        prepareTypesOptions.push({"label": typeCode, "value": typeCode})
+    }
+    const [typesOptions, setTypesOptions] = useState(prepareTypesOptions)
+
+    let prepareIdOptions = []
+    for (const memberId of mechanicCrew.memberIds) {
+        prepareIdOptions.push({"label": memberId, "value": memberId})
+    }
+    const [options, setOptions] = useState(prepareIdOptions);
 
     useEffect(() => {
         setValidName(NAME_REGEX.test(name))
     }, [name])
 
     useEffect(() => {
-        console.log(isSuccess)
         if (isSuccess || isDelSuccess) {
             setName('')
             setHomeAirportCode('')
+            setAircraftTypeCodes([])
+            setMemberIds([])
             navigate('/home/mechanicCrews')
         }
 
@@ -47,7 +61,7 @@ const EditMechanicCrewForm = ({ mechanicCrew }) => {
     const onHomeAirportCodeChanged = e => setHomeAirportCode(e.target.value)
 
     const onSaveMechanicCrewClicked = async (e) => {
-        await updateMechanicCrew({ id: mechanicCrew.id, name, homeAirportCode, aircraftTypeCodes, members })
+        await updateMechanicCrew({ id: mechanicCrew.id, name, homeAirportCode, aircraftTypeCodes, memberIds })
     }
 
     const onDeleteMechanicCrewClicked = async () => {
@@ -56,6 +70,48 @@ const EditMechanicCrewForm = ({ mechanicCrew }) => {
 
     const onGoBackClicked = async () => {
         navigate('/home/mechanicCrews')
+    }
+
+    const onMemberIdsChange = async (selectedOptions) => {
+        const selectedIds = selectedOptions.map((option) => option.value);
+        setMemberIds(selectedIds);
+    }
+    
+    const onAircraftTypeCodesChange = async (selectedOptions) => {
+        const selectedIds = selectedOptions.map((option) => option.value);
+        setAircraftTypeCodes(selectedIds);
+    }
+    
+    const handleAddMemberId = async () => {
+        const newId = prompt('Enter new ID:');
+        if (newId && !options.some((option) => option.value === newId)) {
+            setOptions([...options, { value: newId, label: newId }]);
+        }
+    }
+    
+    const handleAddAircraftTypeCode = async () => {
+        const newId = prompt('Enter aircraftType code:');
+        if (newId && !typesOptions.some((option) => option.value === newId)) {
+            setTypesOptions([...typesOptions, { value: newId, label: newId }]);
+        }
+    }
+    
+    const handleRemoveMemberId = async () => {
+        const confirmed = window.confirm('Are you sure you want to remove the selected IDs?');
+        if (confirmed) {
+          const remainingOptions = options.filter((option) => !memberIds.includes(option.value));
+          setOptions(remainingOptions);
+          setMemberIds([]);
+        }
+    }
+    
+    const handleRemoveAircraftTypeCode = async () => {
+        const confirmed = window.confirm('Are you sure you want to remove the selected codes?');
+        if (confirmed) {
+          const remainingOptions = options.filter((option) => !memberIds.includes(option.value));
+          setTypesOptions(remainingOptions);
+          setAircraftTypeCodes([]);
+        }
     }
 
     let canSave = [validName].every(Boolean) && !isLoading
@@ -124,6 +180,38 @@ const EditMechanicCrewForm = ({ mechanicCrew }) => {
                     value={homeAirportCode}
                     onChange={onHomeAirportCodeChanged}
                 />
+
+                <label className="form__label" htmlFor="memberIds">
+                    MemberIds:
+                </label>
+                <Select
+                    id="memberIds"
+                    name="memberIds"
+                    options={options}
+                    isMulti
+                    value={options.filter((option) => memberIds.includes(option.value))}
+                    onChange={onMemberIdsChange}
+                />
+                <div>
+                    <button onClick={handleAddMemberId}>Add ID</button>
+                    <button onClick={handleRemoveMemberId}>Remove Selected IDs</button>
+                </div>
+
+                <label className="form__label" htmlFor="aircraftTypeCodes">
+                    AircraftTypeCodes:
+                </label>
+                <Select
+                    id="aircraftTypeCodes"
+                    name="aircraftTypeCodes"
+                    options={typesOptions}
+                    isMulti
+                    value={typesOptions.filter((option) => aircraftTypeCodes.includes(option.value))}
+                    onChange={onAircraftTypeCodesChange}
+                />
+                <div>
+                    <button onClick={handleAddAircraftTypeCode}>Add code</button>
+                    <button onClick={handleRemoveAircraftTypeCode}>Remove selected codes</button>
+                </div>
 
             </form>
         </>

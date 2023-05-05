@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useGetMaintenancesQuery } from "./maintenancesApiSlice"
 import Maintenance from "./Maintenance"
+import useAuth from '../../hooks/useAuth'
 
 const MaintenancesList = () => {
 
@@ -13,6 +14,8 @@ const MaintenancesList = () => {
   } = useGetMaintenancesQuery()
 
   const navigate = useNavigate()
+
+  const { isAdmin, isAircraftMaintainer } = useAuth()
 
   let content
 
@@ -46,11 +49,11 @@ const MaintenancesList = () => {
                   {tableContent}
               </tbody>
               <tfoot>
-                <tr>
+                {(isAdmin || isAircraftMaintainer) && <tr>
                     <td colSpan="1">
                         <button onClick={handleButtonClick}>Schedule maintenance</button>
                     </td>
-                </tr>
+                </tr>}
               </tfoot>
           </table>
       )

@@ -24,6 +24,7 @@ const NewAircraftForm = () => {
   const [validAircraftTypeCode, setValidAircraftTypeCode] = useState(false)
   const [homeAirportCode, setHomeAirportCode] = useState('')
   const [validHomeAirportCode, setValidHomeAirportCode] = useState(false)
+  const [maintainerId, setMaintainerId] = useState('')
 
   useEffect(() => {
     setValidCode(CODE_REGEX.test(code))
@@ -42,6 +43,7 @@ const NewAircraftForm = () => {
         setCode('')
         setAircraftTypeCode('')
         setHomeAirportCode('')
+        setMaintainerId('')
         navigate('/home/aircrafts')
     }
   }, [isSuccess, navigate])
@@ -49,13 +51,14 @@ const NewAircraftForm = () => {
   const onCodeChanged = e => setCode(e.target.value)
   const onAircraftTypeCodeChanged = e => setAircraftTypeCode(e.target.value)
   const onHomeAirportCodeChanged = e => setHomeAirportCode(e.target.value)
+  const onMaintainerIdChanged = e => setMaintainerId(e.target.value)
 
   const canSave = [validCode, validAircraftTypeCode, validHomeAirportCode].every(Boolean) && !isLoading
 
   const onSaveAircraftClicked = async (e) => {
       e.preventDefault()
       if (canSave) {
-          await addNewAircraft({ code, aircraftTypeCode, homeAirportCode })
+          await addNewAircraft({ code, aircraftTypeCode, homeAirportCode, maintainerId })
       }
   }
 
@@ -129,6 +132,18 @@ const NewAircraftForm = () => {
                     autoComplete="off"
                     value={homeAirportCode}
                     onChange={onHomeAirportCodeChanged}
+                />
+
+              <label className="form__label" htmlFor="maintainerId">
+                  MaintainerId: <span className="nowrap"></span></label>
+                <input
+                    className={`form__input`}
+                    id="maintainerId"
+                    name="maintainerId"
+                    type="text"
+                    autoComplete="off"
+                    value={maintainerId}
+                    onChange={onMaintainerIdChanged}
                 />
 
         </form>

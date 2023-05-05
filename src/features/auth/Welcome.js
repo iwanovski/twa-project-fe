@@ -3,7 +3,7 @@ import './Welcome.css';
 import useAuth from '../../hooks/useAuth';
 
 const Welcome = () => {
-  const { username, isAdmin, isPlanner } = useAuth()
+  const { username } = useAuth()
 
   const date = new Date();
   const today = new Intl.DateTimeFormat('en-US', {
@@ -19,7 +19,7 @@ const Welcome = () => {
       </div>
       <div className="welcome-links">
         <Link to="/home/users" className="primary-link">
-          All users
+          Users
         </Link>
         <Link to="/home/flights" className="primary-link">
           Flights
@@ -34,7 +34,7 @@ const Welcome = () => {
         </Link>
         <div className="secondary-links">
           <Link to="/home/aircraftTypes">Aircraft Types</Link>
-          <Link to="/home/mechanicCrews">Mechanic Crews</Link>
+          {<Link to="/home/mechanicCrews">Mechanic Crews</Link>}
         </div>
       </div>
     </section>

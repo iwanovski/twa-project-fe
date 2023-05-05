@@ -3,6 +3,7 @@ import { useUpdateMaintenanceMutation, useDeleteMaintenanceMutation } from "./ma
 import { useNavigate } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave, faTrashCan, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
+import useAuth from "../../hooks/useAuth"
 
 const CODE_REGEX = /^[A-z0-9 -]{3,10}$/
 
@@ -23,13 +24,15 @@ const EditMaintenanceForm = ({ maintenance }) => {
 
     const navigate = useNavigate()
 
+    const { id } = useAuth()
+
     const [aircraftCode, setAircraftCode] = useState(maintenance.aircraftCode)
     const [validAircraftCode, setValidAircraftCode] = useState(false)
     const [mechanicCrewId, setMechanicCrewId] = useState(maintenance.mechanicCrewId)
     const [airportCode, setAirportCode] = useState(maintenance.airportCode)
     const [validAirportCode, setValidAirportCode] = useState(false)
     const [date, setDate] = useState(maintenance.date)
-    const plannedBy = "test"
+    const plannedBy = id
 
     useEffect(() => {
         setValidAircraftCode(CODE_REGEX.test(aircraftCode))
@@ -40,7 +43,6 @@ const EditMaintenanceForm = ({ maintenance }) => {
     }, [airportCode])
 
     useEffect(() => {
-        console.log(isSuccess)
         if (isSuccess || isDelSuccess) {
             setMechanicCrewId('')
             setAircraftCode('')
@@ -57,7 +59,7 @@ const EditMaintenanceForm = ({ maintenance }) => {
     const onDateChanged = e => setDate(e.target.value)
 
     const onSaveMaintenanceClicked = async (e) => {
-        await updateMaintenance({ id: maintenance.id, mechanicCrewId, airportCode, plannedBy, date })
+        await updateMaintenance({ id: maintenance.id, aircraftCode, mechanicCrewId, airportCode, plannedBy, date, userId: id })
     }
 
     const onDeleteMaintenanceClicked = async () => {
