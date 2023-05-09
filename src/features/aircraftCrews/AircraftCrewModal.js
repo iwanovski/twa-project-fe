@@ -56,7 +56,7 @@ export default function AircraftCrewModal({ open, handleClose, aircraftCrew }) {
           Second Pilot: {aircraftCrew.secondPilotId}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Members: {aircraftCrew.memberIds}
+          Members: {aircraftCrew.memberIds.toString()}
         </Typography>
       </Box>
     </Modal>

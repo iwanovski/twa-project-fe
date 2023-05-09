@@ -53,10 +53,10 @@ export default function MechanicCrewModal({ open, handleClose, mechanicCrew }) {
           Home airport: {mechanicCrew.homeAirportCode}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Aircraft Types: {mechanicCrew.aircraftTypeCodes}
+          Aircraft Types: {mechanicCrew.aircraftTypeCodes.toString()}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Members: {mechanicCrew.memberIds}
+          Members: {mechanicCrew.memberIds.toString()}
         </Typography>
       </Box>
     </Modal>
